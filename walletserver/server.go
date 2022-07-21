@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"path"
 	"strconv"
+	"strings"
 
 	"moviecoin/wallet"
 )
@@ -121,7 +122,7 @@ func (ws *WalletServer) CreateTransaction(w http.ResponseWriter, req *http.Reque
 func (ws *WalletServer) WalletAmount(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case http.MethodGet:
-		blockchainAddress := req.URL.Query().Get("blockchain_address")
+		blockchainAddress := req.URL.Query().Get("wallet_address")
 		endpoint := fmt.Sprintf("%s/amount", ws.Gateway())
 
 		client := &http.Client{}
@@ -165,10 +166,18 @@ func (ws *WalletServer) WalletAmount(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+func (ws *WalletServer) Auth(handler http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		url := strings.Split(req.RequestURI, " ")
+		log.Printf("Auth: [%s]%s Authenticated successfully", req.Method, url[0])
+		handler(w, req)
+	}
+}
+
 func (ws *WalletServer) Run() {
-	http.HandleFunc("/", ws.Index)
-	http.HandleFunc("/wallet", ws.Wallet)
-	http.HandleFunc("/wallet/amount", ws.WalletAmount)
-	http.HandleFunc("/transaction", ws.CreateTransaction)
+	http.HandleFunc("/", ws.Auth(ws.Index))
+	http.HandleFunc("/wallet", ws.Auth(ws.Wallet))
+	http.HandleFunc("/wallet/amount", ws.Auth(ws.WalletAmount))
+	http.HandleFunc("/transaction", ws.Auth(ws.CreateTransaction))
 	log.Fatal(http.ListenAndServe("0.0.0.0:"+strconv.Itoa(int(ws.Port())), nil))
 }

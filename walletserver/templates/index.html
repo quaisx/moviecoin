@@ -51,7 +51,7 @@
              });
 
              function reload_amount() {
-                 let data = {'wallet_address': $('#sender_address').val()}
+                 let data = {'wallet_address': $('#wallet_address').val()}
                  $.ajax({
                      url: '/wallet/amount',
                      type: 'GET',

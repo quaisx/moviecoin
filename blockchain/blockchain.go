@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 	"moviecoin/utils"
 	"net/http"
 	"strings"
@@ -316,6 +317,11 @@ func (bc *Blockchain) StartMining() {
 
 func (bc *Blockchain) CalculateTotalAmount(blockchainAddress string) float32 {
 	var totalAmount float32 = 0.0
+	if blockchainAddress == MINING_SENDER {
+		//for now, let's assume it's infinite supply of coins
+		totalAmount = float32(math.MaxInt16)
+		return totalAmount
+	}
 	for _, b := range bc.chain {
 		for _, t := range b.transactions {
 			amount := t.amount
