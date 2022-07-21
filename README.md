@@ -1,7 +1,7 @@
-# moviecoin
+# MOVIECOIN
 
-## THIS IS WORK IN PROGRESS AT THE MOMENT
-
+## THIS IS WORK IN PROGRESS
+_(I am working on this project in my free time with the goal to build a blockchain framework to use in my other for-fun projects I am working on at the moment)_
 Initial version of a blockchain implementation in Go.
 
 ![Moviecoin blockchain](/design/Moviecoin.png)
