@@ -12,7 +12,7 @@
                  success: function (response) {
                      $('#public_key').val(response['public_key']);
                      $('#private_key').val(response['private_key']);
-                     $('#blockchain_address').val(response['blockchain_address']);
+                     $('#wallet_address').val(response['wallet_address']);
                      console.info(response);
                  },
                  error: function(error) {
@@ -21,19 +21,13 @@
              });
 
              $('#send_money_button').click(function () {
-                 let confirm_text = 'Are you sure to send?';
-                 let confirm_result = confirm(confirm_text);
-                 if (confirm_result !== true) {
-                     alert('Canceled');
-                     return
-                 }
 
                  let transaction_data = {
                      'sender_private_key': $('#private_key').val(),
-                     'sender_blockchain_address': $('#blockchain_address').val(),
-                     'recipient_blockchain_address': $('#recipient_blockchain_address').val(),
+                     'sender_address': $('#wallet_address').val(),
+                     'receiver_address': $('#receiver_address').val(),
                      'sender_public_key': $('#public_key').val(),
-                     'value': $('#send_amount').val(),
+                     'amount': $('#send_amount').val(),
                  };
 
                  $.ajax({
@@ -57,7 +51,7 @@
              });
 
              function reload_amount() {
-                 let data = {'blockchain_address': $('#blockchain_address').val()}
+                 let data = {'wallet_address': $('#sender_address').val()}
                  $.ajax({
                      url: '/wallet/amount',
                      type: 'GET',
@@ -73,12 +67,6 @@
                  })
              }
 
-             /*
-             $('#reload_wallet').click(function(){
-                 reload_amount();
-             });
-             */
-
              setInterval(reload_amount, 3000)
 
          })
@@ -90,9 +78,6 @@
     <div>
         <h1>Wallet</h1>
         <div id="wallet_amount">0</div>
-        <!--
-        <button id="reload_wallet">Reload Wallet</button>
-        -->
 
         <p>Public  Key</p>
         <textarea id="public_key" rows="2" cols="100"></textarea>
@@ -100,15 +85,15 @@
         <p>Private  Key</p>
         <textarea id="private_key" rows="1" cols="100"></textarea>
 
-        <p>Blockchain Address</p>
-        <textarea id="blockchain_address" rows="1" cols="100"></textarea>
+        <p>Wallet Address</p>
+        <textarea id="wallet_address" rows="1" cols="100"></textarea>
 
     </div>
 
     <div>
         <h1>Send Money</h1>
         <div>
-            Address: <input id="recipient_blockchain_address" size="100" type="text">
+            Address: <input id="receiver_address" size="100" type="text">
             <br>
             Amount: <input id="send_amount" type="text">
             <br>

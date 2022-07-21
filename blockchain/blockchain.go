@@ -21,14 +21,10 @@ import (
 const (
 	// @TODO - group 1
 	MINING_DIFFICULTY = 3
-	MINING_SENDER     = "THE BLOCKCHAIN"
+	MINING_SENDER     = "MOVIECOIN BLOCKCHAIN"
 	MINING_REWARD     = 1.0
 	MINING_TIMER_SEC  = 30 // default mining time lapse
 	// @TODO - group 2
-	BLOCKCHAIN_PORT_RANGE_START       = 5000
-	BLOCKCHAIN_PORT_RANGE_END         = 5003
-	NEIGHBOR_IP_RANGE_START           = 0
-	NEIGHBOR_IP_RANGE_END             = 1
 	BLOCKCHAIN_NEIGHBOR_SYNC_TIME_SEC = 20
 )
 
@@ -83,6 +79,7 @@ func (bc *Blockchain) Run() {
 	bc.StartMining()
 }
 
+// Periodically notify other nodes of us being alive
 func (bc *Blockchain) StartNotifyNeighbors() {
 	bc.NotifyNeighbors()
 	_ = time.AfterFunc(time.Second*BLOCKCHAIN_NEIGHBOR_SYNC_TIME_SEC, bc.StartNotifyNeighbors)

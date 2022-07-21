@@ -87,7 +87,7 @@ func (ws *WalletServer) CreateTransaction(w http.ResponseWriter, req *http.Reque
 
 		publicKey := utils.PublicKeyFromString(*t.SenderPublicKey)
 		privateKey := utils.PrivateKeyFromString(*t.SenderPrivateKey, publicKey)
-		value, err := strconv.ParseFloat(*t.Value, 32)
+		value, err := strconv.ParseFloat(*t.Amount, 32)
 		if err != nil {
 			log.Println("ERROR: parse error")
 			io.WriteString(w, string(utils.JsonStatus("fail")))
@@ -97,16 +97,21 @@ func (ws *WalletServer) CreateTransaction(w http.ResponseWriter, req *http.Reque
 
 		w.Header().Add("Content-Type", "application/json")
 
-		transaction := wallet.NewTransaction(privateKey, publicKey,
-			*t.SenderBlockchainAddress, *t.RecipientBlockchainAddress, value32)
+		transaction := wallet.NewTransaction(
+			privateKey,
+			publicKey,
+			*t.SenderAddress,
+			*t.ReceiverAddress,
+			value32)
 		signature := transaction.GenerateSignature()
 		signatureStr := signature.String()
 
 		bt := &blockchain.TransactionRequest{
-			t.SenderBlockchainAddress,
-			t.RecipientBlockchainAddress,
-			t.SenderPublicKey,
-			&value32, &signatureStr,
+			SenderAddress:   t.SenderAddress,
+			ReceiverAddress: t.ReceiverAddress,
+			SenderPublicKey: t.SenderPublicKey,
+			Amount:          &value32,
+			Signature:       &signatureStr,
 		}
 		m, _ := json.Marshal(bt)
 		buf := bytes.NewBuffer(m)

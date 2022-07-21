@@ -25,6 +25,7 @@ var PATTERN = regexp.MustCompile(`((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?\.){3})(
 
 const (
 	defaultMulticastAddress = "239.0.0.0:9999"
+	liveNodeHeader          = "<LIVE NODE>"
 )
 
 type NeighborCache struct {
@@ -53,7 +54,7 @@ func MulticastHandler(src *net.UDPAddr, n int, b []byte) {
 	msg := string(b[:n])
 	log.Printf("Multicast message received: %s - %s [%d bytes]", src, msg, n)
 	tokens := strings.Split(msg, "|")
-	if tokens[0] == "<NEW NODE>" {
+	if tokens[0] == liveNodeHeader {
 		// @TODO: check for ip address correctness
 		neighborCache.Update(tokens[1])
 	}
@@ -85,7 +86,7 @@ func NotifyNeighbors(myHost string, myPort uint16) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	message := fmt.Sprintf("<NEW NODE>|%s", address)
+	message := fmt.Sprintf("%s|%s", liveNodeHeader, address)
 	// Multicast presence 3 times
 	for i := 0; i < 3; i++ {
 		log.Printf(" -> Notify neighbors about my presence: %s", address)
