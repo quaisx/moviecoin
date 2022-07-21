@@ -4,6 +4,8 @@
 
 Initial version of a blockchain implementation in Go
 
+![Moviecoin blockchain](/design/Moviecoint.png)
+
 You will need to run a coupld of chain servers:
 ```
 cd chainserver
