@@ -45,21 +45,11 @@ func (ws *WalletServer) Index(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-type WalletAmount struct {
-	Amount float32 `json:"amount"`
-}
-
 func (ws *WalletServer) Wallet(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case http.MethodPost:
 		w.Header().Add("Content-Type", "application/json")
-		dec := json.NewDecoder(req.Body)
-		amount := &WalletAmount{Amount: 0.}
-		err := dec.Decode(&amount)
-		if err != nil {
-			fmt.Printf("reading default wallet amount: %v", err)
-		}
-		myWallet := wallet.NewWallet(amount.Amount)
+		myWallet := wallet.NewWallet()
 		m, _ := myWallet.MarshalJSON()
 		io.WriteString(w, string(m[:]))
 	default:

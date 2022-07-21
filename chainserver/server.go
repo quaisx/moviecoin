@@ -28,7 +28,7 @@ func (bcs *BlockchainServer) Port() uint16 {
 func (bcs *BlockchainServer) GetBlockchain() *blockchain.Blockchain {
 	bc, ok := cache["blockchain"]
 	if !ok {
-		minersWallet := wallet.NewWallet(0.)
+		minersWallet := wallet.NewWallet()
 		bc = blockchain.NewBlockchain(minersWallet.WalletAddress(), bcs.Port())
 		cache["blockchain"] = bc
 		log.Printf("private_key %v", minersWallet.PrivateKeyStr())

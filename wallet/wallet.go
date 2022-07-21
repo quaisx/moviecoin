@@ -19,7 +19,7 @@ type Wallet struct {
 	walletAddress string
 }
 
-func NewWallet(amount float32) *Wallet {
+func NewWallet() *Wallet {
 	// 1. Creating ECDSA private key (32 bytes) public key (64 bytes)
 	w := new(Wallet)
 	privateKey, _ := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
