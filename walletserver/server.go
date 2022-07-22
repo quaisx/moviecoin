@@ -11,6 +11,7 @@ import (
 	"moviecoin/utils"
 	"net/http"
 	"path"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -37,9 +38,14 @@ func (ws *WalletServer) Gateway() string {
 }
 
 func (ws *WalletServer) Index(w http.ResponseWriter, req *http.Request) {
+	url := strings.Split(req.RequestURI, " ")
+	log.Printf("[%s]%s", req.Method, url[0])
 	switch req.Method {
 	case http.MethodGet:
-		t, _ := template.ParseFiles(path.Join(tempDir, "index.html"))
+		t, err := template.ParseFiles(path.Join(tempDir, "index.html"))
+		if err != nil {
+			log.Printf("ERROR processing template: %s", err)
+		}
 		t.Execute(w, "")
 	default:
 		log.Printf("ERROR: Invalid HTTP Method")
@@ -47,6 +53,8 @@ func (ws *WalletServer) Index(w http.ResponseWriter, req *http.Request) {
 }
 
 func (ws *WalletServer) Wallet(w http.ResponseWriter, req *http.Request) {
+	url := strings.Split(req.RequestURI, " ")
+	log.Printf("[%s]%s", req.Method, url[0])
 	switch req.Method {
 	case http.MethodPost:
 		w.Header().Add("Content-Type", "application/json")
@@ -60,6 +68,8 @@ func (ws *WalletServer) Wallet(w http.ResponseWriter, req *http.Request) {
 }
 
 func (ws *WalletServer) CreateTransaction(w http.ResponseWriter, req *http.Request) {
+	url := strings.Split(req.RequestURI, " ")
+	log.Printf("[%s]%s", req.Method, url[0])
 	switch req.Method {
 	case http.MethodPost:
 		decoder := json.NewDecoder(req.Body)
@@ -120,6 +130,8 @@ func (ws *WalletServer) CreateTransaction(w http.ResponseWriter, req *http.Reque
 }
 
 func (ws *WalletServer) WalletAmount(w http.ResponseWriter, req *http.Request) {
+	url := strings.Split(req.RequestURI, " ")
+	log.Printf("[%s]%s", req.Method, url[0])
 	switch req.Method {
 	case http.MethodGet:
 		blockchainAddress := req.URL.Query().Get("wallet_address")
@@ -174,10 +186,31 @@ func (ws *WalletServer) Auth(handler http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+func (ws *WalletServer) AssetServe(w http.ResponseWriter, req *http.Request) {
+	url := strings.Split(req.RequestURI, " ")
+	log.Printf("AssetServe: [%s]%s", req.Method, url[0])
+
+	hd := http.StripPrefix("/templates/", http.FileServer(http.Dir("./templates")))
+
+	re_ico, _ := regexp.Compile(`\.ico`)
+	found := re_ico.Find([]byte(url[0]))
+	if found != nil {
+		w.Header().Set("Content-Type", "image/x-icon")
+	}
+
+	re_css, _ := regexp.Compile(`\.css`)
+	found = re_css.Find([]byte(url[0]))
+	if found != nil {
+		w.Header().Set("Content-Type", "text/css")
+	}
+	hd.ServeHTTP(w, req)
+}
+
 func (ws *WalletServer) Run() {
-	http.HandleFunc("/", ws.Auth(ws.Index))
-	http.HandleFunc("/wallet", ws.Auth(ws.Wallet))
-	http.HandleFunc("/wallet/amount", ws.Auth(ws.WalletAmount))
-	http.HandleFunc("/transaction", ws.Auth(ws.CreateTransaction))
+	http.HandleFunc("/", ws.Index)
+	http.HandleFunc("/wallet", ws.Wallet)
+	http.HandleFunc("/wallet/amount", ws.WalletAmount)
+	http.HandleFunc("/transaction", ws.CreateTransaction)
+	http.HandleFunc("/templates/", ws.AssetServe)
 	log.Fatal(http.ListenAndServe("0.0.0.0:"+strconv.Itoa(int(ws.Port())), nil))
 }
