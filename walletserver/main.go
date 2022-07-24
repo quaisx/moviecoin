@@ -36,7 +36,7 @@ func main() {
 		if ipv4 == nil {
 			continue
 		}
-		*gateway = addr
+		*gateway = "http://" + addr
 		break
 	}
 
