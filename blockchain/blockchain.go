@@ -319,7 +319,7 @@ func (bc *Blockchain) CalculateTotalAmount(blockchainAddress string) float32 {
 	var totalAmount float32 = 0.0
 	if blockchainAddress == MINING_SENDER {
 		//for now, let's assume it's infinite supply of coins
-		totalAmount = float32(math.MaxInt16)
+		totalAmount = float32(math.MaxFloat32)
 		return totalAmount
 	}
 	for _, b := range bc.chain {
