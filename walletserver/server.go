@@ -21,8 +21,8 @@ import (
 const tempDir = "./templates"
 
 type WalletServer struct {
-	port    uint16
-	gateway string
+	blockchain_node_port uint16
+	blockchain_node      string
 }
 
 func NewWalletServer(port uint16, gateway string, gateway_port uint16) *WalletServer {
@@ -30,11 +30,11 @@ func NewWalletServer(port uint16, gateway string, gateway_port uint16) *WalletSe
 }
 
 func (ws *WalletServer) Port() uint16 {
-	return ws.port
+	return ws.blockchain_node_port
 }
 
 func (ws *WalletServer) Gateway() string {
-	return ws.gateway
+	return ws.blockchain_node
 }
 
 func (ws *WalletServer) Index(w http.ResponseWriter, req *http.Request) {
@@ -212,5 +212,5 @@ func (ws *WalletServer) Run() {
 	http.HandleFunc("/wallet/amount", ws.WalletAmount)
 	http.HandleFunc("/transaction", ws.CreateTransaction)
 	http.HandleFunc("/templates/", ws.AssetServe)
-	log.Fatal(http.ListenAndServe("0.0.0.0:"+strconv.Itoa(int(ws.Port())), nil))
+	log.Fatalf("%v", http.ListenAndServe("0.0.0.0:"+strconv.Itoa(int(ws.Port())), nil))
 }
