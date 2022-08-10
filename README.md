@@ -26,10 +26,10 @@ and use sender address as **"MOVIECOIN BLOCKCHAIN"**
 to send yourself a few coins to get started. At the moment it's an unlimited supply of coins.
 
 
-![Moviecoin landing page](/design/step-1.jpeg)
+![Moviecoin landing page](/design/send-1.jpeg)
 
-![Moviecoin send from blockcahin](/design/step-2.jpeg
+![Moviecoin send from blockcahin](/design/send-2.jpeg)
 
-![Moviecoin update wallet amount](/design/step-3.jpeg)
+![Moviecoin update wallet amount](/design/send-3.jpeg)
 
 What I am working on next: Web Wallet Authentication and persistence
