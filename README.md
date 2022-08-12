@@ -38,7 +38,9 @@ Encryption
 ![Moviecoin AES Cipher Block Chaining](/design/CBC-encryption.png)
 Decryption
 ![Moviecoin AES Cipher Block Chaining](/design/CBC-decryption.png)
+<hr>
 ![Cipher Block Chaining Mode of Operation](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation)
+
 ![Galois/Counter Mode (GCM)](https://en.wikipedia.org/wiki/Galois/Counter_Mode)
 
 What I am working on next: Web Wallet Authentication and persistence
