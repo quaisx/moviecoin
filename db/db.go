@@ -60,6 +60,10 @@ func (db *Database) TableExists(table string) (exists bool) {
 
 func (db *Database) NewConnection(conn_str string) (err error) {
 	config, err := pgxpool.ParseConfig(conn_str)
+	if err != nil {
+		log.Printf("Parse connection string error: %+v", err)
+		return err
+	}
 	config.MinConns, config.MaxConns = PGXPOOL_MIN, PGXPOOL_MAX
 	db.database, err = pgxpool.ConnectConfig(context.Background(), config)
 	if err != nil {
