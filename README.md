@@ -43,4 +43,4 @@ Decryption
 
 ![Galois/Counter Mode (GCM)](https://en.wikipedia.org/wiki/Galois/Counter_Mode)
 
-What I am working on next: Web Wallet Authentication and persistence
+What I am working on next: Web Wallet front with React.js
